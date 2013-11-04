@@ -1,3 +1,11 @@
+# Other Stuff
+Makefile
+
+# Qt Stuff
+moc_*
+qrc_*
+*.pro.user
+
 # Compiled Object files
 *.slo
 *.lo
