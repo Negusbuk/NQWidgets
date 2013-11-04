@@ -15,7 +15,7 @@ public:
 
     virtual QSize sizeHint() const;
     virtual QSize minimumSizeHint() const;
-    QColor color() const { return currentColor_; }
+    const QColor& color() const { return currentColor_; }
 
 signals:
 
