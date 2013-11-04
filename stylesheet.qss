@@ -1,0 +1,5 @@
+TokenEditItem {
+  padding: 2px 2px 2px 2px;
+  qproperty-itemColor: lightblue;
+  color: black;
+}
