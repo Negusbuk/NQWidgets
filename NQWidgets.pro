@@ -15,12 +15,14 @@ TEMPLATE = app
 SOURCES += main.cpp\
            mainwindow.cpp \
            flowlayout.cpp \
+           nqlogger.cpp \
            nqtokenedit.cpp \
            nqtokenedititem.cpp \
            nqcolorwheel.cpp
 
 HEADERS += mainwindow.h \
            flowlayout.h \
+           nqlogger.h \
            nqtokenedit.h \
            nqtokenedititem.h \
            nqcolorwheel.h

@@ -18,14 +18,21 @@
  **
  ****************************************************************************/
 
+#include <iostream>
+
 #include <QFile>
 #include <QApplication>
+
+#include "nqlogger.h"
 
 #include "mainwindow.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
+    NQLogger::instance()->addDestiniation(stdout);
+    NQLog("Main") << "Test";
 
     QFile file(":/qss/stylesheet.qss");
     file.open(QFile::ReadOnly);
