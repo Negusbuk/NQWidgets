@@ -24,8 +24,9 @@
 
 #include "nqlogger.h"
 
-NQLog::NQLog(const QString& module)
+NQLog::NQLog(const QString& module, LogLevel level)
     : module_(module),
+      level_(level),
       stream_(&buffer_)
 {
 
@@ -33,7 +34,7 @@ NQLog::NQLog(const QString& module)
 
 NQLog::~NQLog()
 {
-    NQLogger::instance()->write(module_, buffer_);
+    NQLogger::instance()->write(module_, level_, buffer_);
 }
 
 NQLogger* NQLogger::instance_ = NULL;
@@ -53,7 +54,7 @@ NQLogger* NQLogger::instance(QObject *parent)
     return instance_;
 }
 
-void NQLogger::write(const QString& module, const QString& buffer)
+void NQLogger::write(const QString& module, NQLog::LogLevel level, const QString& buffer)
 {
     QString dateString = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz");
 
@@ -64,23 +65,25 @@ void NQLogger::write(const QString& module, const QString& buffer)
     message += buffer;
     message += "\n";
 
-    for (std::vector<QTextStream*>::iterator it = destinations_.begin();
+    for (std::vector<std::pair<NQLog::LogLevel,QTextStream*> >::iterator it = destinations_.begin();
          it!=destinations_.end();
          ++it) {
-        QTextStream* stream = *it;
+        if (level>=it->first) {
+        QTextStream* stream = it->second;
         stream->operator <<(message);
         stream->flush();
+        }
     }
 }
 
-void NQLogger::addDestiniation(QIODevice * device)
+void NQLogger::addDestiniation(QIODevice * device, NQLog::LogLevel level)
 {
     QTextStream* stream = new QTextStream(device);
-    destinations_.push_back(stream);
+    destinations_.push_back(std::pair<NQLog::LogLevel,QTextStream*>(level,stream));
 }
 
-void NQLogger::addDestiniation(FILE * fileHandle)
+void NQLogger::addDestiniation(FILE * fileHandle, NQLog::LogLevel level)
 {
     QTextStream* stream = new QTextStream(fileHandle);
-    destinations_.push_back(stream);
+    destinations_.push_back(std::pair<NQLog::LogLevel,QTextStream*>(level,stream));
 }

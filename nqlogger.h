@@ -31,7 +31,14 @@ class NQLog
 {
 public:
 
-    NQLog(const QString& module);
+    enum LogLevel {
+        Spam        = 0,
+        Message     = 1,
+        Warning     = 2,
+        Critical    = 3
+    };
+
+    NQLog(const QString& module, LogLevel level = Message);
     ~NQLog();
 
     inline NQLog &operator<<(QChar t) { stream_ << '\'' << t << '\''; return *this;}
@@ -69,6 +76,7 @@ public:
 protected:
 
     QString module_;
+    LogLevel level_;
     QString buffer_;
     QTextStream stream_;
 };
@@ -80,17 +88,17 @@ public:
 
     static NQLogger* instance(QObject *parent = 0);
 
-    void write(const QString& module, const QString&buffer);
+    void write(const QString& module, NQLog::LogLevel level, const QString&buffer);
 
-    void addDestiniation(QIODevice * device);
-    void addDestiniation(FILE * fileHandle);
+    void addDestiniation(QIODevice * device, NQLog::LogLevel level = NQLog::Message);
+    void addDestiniation(FILE * fileHandle, NQLog::LogLevel level = NQLog::Message);
 
 protected:
 
     explicit NQLogger(QObject *parent = 0);
     static NQLogger* instance_;
 
-    std::vector<QTextStream*> destinations_;
+    std::vector<std::pair<NQLog::LogLevel,QTextStream*> > destinations_;
 };
 
 #endif // NQLOGGER_H
