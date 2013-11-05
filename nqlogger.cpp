@@ -62,6 +62,7 @@ void NQLogger::write(const QString& module, const QString& buffer)
     message += module;
     message += "] ";
     message += buffer;
+    message += "\n";
 
     for (std::vector<QTextStream*>::iterator it = destinations_.begin();
          it!=destinations_.end();
