@@ -22,6 +22,7 @@
 #define NQLOGGER_H
 
 #include <vector>
+#include <string>
 
 #include <QObject>
 #include <QIODevice>
@@ -64,6 +65,7 @@ public:
     inline NQLog &operator<<(double t) { stream_ << t; return *this; }
 
     inline NQLog &operator<<(const char* t) { stream_ << QString::fromAscii(t); return *this; }
+    inline NQLog &operator<<(const std::string& t) { stream_ << QString::fromAscii(t.c_str()); return *this; }
     inline NQLog &operator<<(const QString& t) { stream_ << '\"' << t << '\"'; return *this; }
     inline NQLog &operator<<(const QStringRef & t) { return operator<<(t.toString()); }
     inline NQLog &operator<<(const QLatin1String &t) { stream_ << '\"'  << t.latin1() << '\"'; return *this; }
