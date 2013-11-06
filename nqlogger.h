@@ -35,7 +35,8 @@ public:
         Spam        = 0,
         Message     = 1,
         Warning     = 2,
-        Critical    = 3
+        Critical    = 3,
+        Fatal       = 4
     };
 
     NQLog(const QString& module, LogLevel level = Message);
