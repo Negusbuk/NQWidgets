@@ -59,6 +59,14 @@ void NQLogger::write(const QString& module, NQLog::LogLevel level, const QString
     QString dateString = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss.zzz");
 
     QString message = dateString;
+    switch (level) {
+    case NQLog::Spam: message += " S"; break;
+    case NQLog::Message: message += " M"; break;
+    case NQLog::Warning: message += " W"; break;
+    case NQLog::Critical: message += " C"; break;
+    case NQLog::Fatal: message += " F"; break;
+    }
+
     message += " [";
     message += module;
     message += "] ";
