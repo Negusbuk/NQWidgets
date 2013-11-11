@@ -261,7 +261,7 @@ void NQColorWheel::resizeEvent(QResizeEvent *event)
     update();
 }
 
-void NQColorWheel::paintEvent(QPaintEvent *e)
+void NQColorWheel::paintEvent(QPaintEvent * /* e */)
 {
     QPainter painter(this);
 

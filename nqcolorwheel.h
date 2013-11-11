@@ -51,7 +51,7 @@ protected:
     void mouseMoveEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *);
     void resizeEvent(QResizeEvent *event);
-    void paintEvent(QPaintEvent *e);
+    void paintEvent(QPaintEvent *);
 
     void initializeWheel(const QSize& size);
     void initializeSquare(int hue);
