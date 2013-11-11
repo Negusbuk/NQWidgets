@@ -46,7 +46,9 @@ public:
     inline NQLog &operator<<(QChar t) { stream_ << '\'' << t << '\''; return *this;}
     inline NQLog &operator<<(char t) { stream_ << t; return *this; }
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     inline NQLog &operator<<(QBool t) { stream_ << (bool(t != 0) ? "true" : "false"); return *this; }
+#endif
     inline NQLog &operator<<(bool t) { stream_ << (t ? "true" : "false"); return *this; }
 
     inline NQLog &operator<<(signed short t) { stream_ << t; return *this; }
@@ -64,8 +66,8 @@ public:
     inline NQLog &operator<<(float t) { stream_ << t; return *this; }
     inline NQLog &operator<<(double t) { stream_ << t; return *this; }
 
-    inline NQLog &operator<<(const char* t) { stream_ << QString::fromAscii(t); return *this; }
-    inline NQLog &operator<<(const std::string& t) { stream_ << QString::fromAscii(t.c_str()); return *this; }
+    inline NQLog &operator<<(const char* t) { stream_ << QString::fromLatin1(t); return *this; }
+    inline NQLog &operator<<(const std::string& t) { stream_ << QString::fromStdString(t); return *this; }
     inline NQLog &operator<<(const QString& t) { stream_ << '\"' << t << '\"'; return *this; }
     inline NQLog &operator<<(const QStringRef & t) { return operator<<(t.toString()); }
     inline NQLog &operator<<(const QLatin1String &t) { stream_ << '\"'  << t.latin1() << '\"'; return *this; }
