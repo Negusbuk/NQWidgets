@@ -15,7 +15,6 @@ greaterThan(QT_MAJOR_VERSION, 4){
 TARGET = NQWidgets
 TEMPLATE = app
 
-
 SOURCES += main.cpp\
            mainwindow.cpp \
            flowlayout.cpp \
@@ -34,3 +33,7 @@ HEADERS += mainwindow.h \
 OTHER_FILES += stylesheet.qss
 
 RESOURCES += resources.qrc
+
+doc.depends = $(HEADERS)
+doc.commands = doxygen documentation/Doxyfile; cd html; git push origin gh-pages; cd .. 
+QMAKE_EXTRA_TARGETS += doc
