@@ -1,0 +1,7 @@
+Makefile
+NQWidgets.app
+NQWidgets.pro.user
+*.d
+*.o
+moc_*
+qrc_resources.cpp
