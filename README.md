@@ -1,7 +1,7 @@
 NQWidgets
 =========
 
-A collection of more or less useful Qt widgets.
+NQWidgets is a collection of Qt classes.
 
 NQTokenEdit
 ===========
