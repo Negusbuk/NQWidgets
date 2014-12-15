@@ -36,6 +36,7 @@ public:
     virtual QSize sizeHint() const;
     virtual QSize minimumSizeHint() const;
     const QColor& color() const { return currentColor_; }
+    qreal minimumS() const { return minimumS_; }
 
 signals:
 
@@ -44,6 +45,7 @@ signals:
 public slots:
 
     void setColor(const QColor &color);
+    void setMinimumS(qreal value) { minimumS_ = value; }
 
 protected:
 
@@ -51,7 +53,7 @@ protected:
     void mouseMoveEvent(QMouseEvent *event);
     void mouseReleaseEvent(QMouseEvent *);
     void resizeEvent(QResizeEvent *event);
-    void paintEvent(QPaintEvent *);
+    void paintEvent(QPaintEvent *e);
 
     void initializeWheel(const QSize& size);
     void initializeSquare(int hue);
@@ -66,6 +68,7 @@ protected:
     QSize size_;
     int margin_;
     int wheelWidth_;
+    qreal minimumS_;
     QImage imageWheel_;
     QPixmap pixmapWheel_;
     QRegion regionWheel_;

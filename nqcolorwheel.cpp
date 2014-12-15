@@ -18,6 +18,9 @@
  **
  ****************************************************************************/
 
+#include <iostream>
+#include <cmath>
+
 #include <QPainter>
 #include <QResizeEvent>
 #include <QStyleOption>
@@ -31,11 +34,11 @@ NQColorWheel::NQColorWheel(QWidget *parent) :
     size_(200, 200),
     margin_(5),
     wheelWidth_(20),
+    minimumS_(0.0),
     currentColor_(Qt::white),
     mousePressed_(false),
     insideWheel_(false),
     insideSquare_(false)
-
 {
     setFixedSize(size_);
 
@@ -56,8 +59,6 @@ QSize NQColorWheel::minimumSizeHint() const
 
 void NQColorWheel::setColor(const QColor &color)
 {
-    if (color==currentColor_) return;
-
     int h = color.hue();
     int s = color.saturation();
     int v = color.value();
@@ -134,7 +135,7 @@ void NQColorWheel::initializeSquare(int hue)
     QRgb vv;
     for(int i=0;i<255;++i){
         for(int j=0;j<255;++j){
-            color = QColor::fromHsv(hue,i,j);
+            color = QColor::fromHsv(hue, i * (1.0-minimumS_) + minimumS_*255, j);
             vv = qRgb(color.red(),color.green(),color.blue());
             square.setPixel(i,j,vv);
         }
@@ -182,27 +183,28 @@ void NQColorWheel::drawPicker(const QColor &color)
     qreal m = w/2.0-ir/qSqrt(2);
     painter.translate(m-5, m-5);
     qreal SquareWidth = 2*ir/qSqrt(2);
-    qreal S = color.saturationF()*SquareWidth;
+    qreal S = (color.saturationF()-minimumS_)/(1.0-minimumS_)*SquareWidth;
     qreal V = color.valueF()*SquareWidth;
 
-    if (color.saturation() > 30 ||color.value() < 50){
+    if (color.saturation() > 30 || color.value() < 50){
         //pen.setColor(Qt::white);
     }
+
     pen.setWidth(2);
     painter.setPen(pen);
-    painter.drawEllipse(S,V,8,8);
+    painter.drawEllipse(S, V, 8, 8);
 }
 
 void NQColorWheel::mousePressEvent(QMouseEvent *event)
 {
     lastPosition_ = event->pos();
 
-    if(regionWheel_.contains(lastPosition_)){
+    if (regionWheel_.contains(lastPosition_)) {
         insideWheel_ = true;
         insideSquare_ = false;
         QColor color = colorFromPosition(lastPosition_);
         hueChanged(color.hue());
-    } else if (regionSquare_.contains(lastPosition_)){
+    } else if (regionSquare_.contains(lastPosition_)) {
         insideWheel_ = false;
         insideSquare_ = true;
         QColor color = colorFromPosition(lastPosition_);
@@ -216,15 +218,15 @@ void NQColorWheel::mouseMoveEvent(QMouseEvent *event)
 {
     lastPosition_ = event->pos();
 
-    if (!mousePressed_ ) return;
+    if (!mousePressed_) return;
 
-    if (/*regionWheel_.contains(lastPosition_) &&*/ insideWheel_){
+    if (insideWheel_) {
         QColor color = colorFromPosition(lastPosition_);
         if (color.isValid()) hueChanged(color.hue());
-    } else if(insideSquare_){
+    } else if (insideSquare_){
         QColor color = colorFromPosition(lastPosition_);
         if (color.isValid()) svChanged(color);
-    } else{
+    } else {
         // TODO: due with cursor out of region after press
         //        int length = qMin(width(), height());
         //        QPoint center(length/2, length/2);
@@ -324,10 +326,12 @@ QColor NQColorWheel::colorFromPosition(const QPoint &point)
         qreal s = p.x()/SquareWidth;
         if (s<0) s = 0.0;
         if (s>1) s = 1.0;
+        //if (s<minimumS_) s = minimumS_;
         qreal v = p.y()/SquareWidth;
         if (v<0) v = 0.0;
         if (v>1) v = 1.0;
-        return QColor::fromHsvF(currentColor_.hueF(), s, v);
+
+        return QColor::fromHsvF(currentColor_.hueF(), minimumS_ + s*(1.0-minimumS_), v);
     }
 
     return QColor();
@@ -354,7 +358,7 @@ void NQColorWheel::svChanged(const QColor &newcolor)
     currentColor_.setHsv(hue,
                          newcolor.saturation(),
                          newcolor.value());
-    if(!isVisible()) return;
+    if (!isVisible()) return;
     //drawWheel(size());
     //drawSquare(hue);
     //drawIndicator(hue);
